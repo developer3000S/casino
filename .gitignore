@@ -1,0 +1,25 @@
+# Зависимости проекта
+node_modules/
+
+# Файлы конфигурации и секретов
+.env
+config/secrets.js
+*.env
+.env.local
+.env.development
+.env.production
+
+# Логи
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Данные среды выполнения
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swonode_modules
