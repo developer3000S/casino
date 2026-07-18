@@ -2,6 +2,13 @@ const express = require("express")
 const app = express()
 const bodyParser = require('body-parser')
 
+const initDatabase = require('./database/init')
+initDatabase().then(() => {
+  console.log('Database initialized successfully.')
+}).catch((err) => {
+  console.error('Database initialization failed:', err)
+})
+
 var http = require('http').createServer(app)
 var io = require('socket.io')(http)
 
@@ -27,6 +34,8 @@ var googlePayment = require("./payments/googlePayment")
 app.use(googlePayment)
 var withdrawPayment = require("./payments/withdrawPayment")
 app.use(withdrawPayment)
+var cryptoPayment = require("./payments/cryptoPayment")
+app.use(cryptoPayment)
 
 const { encrypt, decrypt } = require('./utils/crypto')
 const { get_device, get_extra_data, check_streak } = require("./utils/other")
