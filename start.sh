@@ -70,9 +70,9 @@ echo "Starting in mode: $MODE (PORT=$PORT)"
 # - server side uses root scripts
 # - client uses npm script inside ./client
 if [[ "$MODE" == "prod" ]]; then
-  SERVER_CMD="npm run server --silent"
+  SERVER_CMD="PORT=$PORT npm run server --silent"
 else
-  SERVER_CMD="npm run server:dev --silent"
+  SERVER_CMD="PORT=$PORT npm run server:dev --silent"
 fi
 
 CLIENT_CMD="npm run client --silent"
@@ -81,9 +81,9 @@ CLIENT_CMD="npm run client --silent"
 # Prefer local (node_modules/.bin) concurrently; fall back to global if available
 CONCURRENTLY_BIN="./node_modules/.bin/concurrently"
 if [[ -x "$CONCURRENTLY_BIN" ]]; then
-  "$CONCURRENTLY_BIN" -k -s "$SERVER_CMD" "$CLIENT_CMD"
+  "$CONCURRENTLY_BIN" -k "$SERVER_CMD" "$CLIENT_CMD"
 else
-  concurrently -k -s "$SERVER_CMD" "$CLIENT_CMD"
+  concurrently -k "$SERVER_CMD" "$CLIENT_CMD"
 fi
 
 
