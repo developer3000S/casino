@@ -18,17 +18,27 @@ echo "--- Начинаю обновление GitHub ---"
 echo "[1/3] Добавление файлов..."
 git add .
 
-# 2. Создание коммита
-echo "[2/3] Создание коммита: '$COMMIT_MSG'..."
-git commit -m "$COMMIT_MSG"
+# 2. Создание коммита (если есть изменения)
+if ! git diff-index --quiet HEAD --; then
+    echo "[2/3] Создание коммита: '$COMMIT_MSG'..."
+    git commit -m "$COMMIT_MSG"
+else
+    echo "[2/3] Нет изменений для создания коммита."
+fi
 
-# 3. Пуш в основную ветку (main)
-echo "[3/3] Отправка данных на GitHub (ветка main)..."
-git push origin main
+# 3. Получение изменений и пуш в основную ветку (main)
+echo "[3/3] Синхронизация с GitHub (ветка main)..."
+git pull origin main --rebase
 
 if [ $? -eq 0 ]; then
-    echo "--- Успех: Репозиторий обновлен! ---"
+    git push origin main
+    if [ $? -eq 0 ]; then
+        echo "--- Успех: Репозиторий обновлен! ---"
+    else
+        echo "--- Ошибка: Не удалось отправить (push) данные на GitHub. ---"
+        exit 1
+    fi
 else
-    echo "--- Ошибка: Не удалось обновить репозиторий. ---"
+    echo "--- Ошибка: Не удалось получить (pull) изменения с GitHub. Возможно, есть конфликты слияния. ---"
     exit 1
 fi
